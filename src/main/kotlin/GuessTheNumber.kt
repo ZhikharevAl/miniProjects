@@ -1,4 +1,20 @@
+import kotlin.system.exitProcess
+
 fun main() {
+    val game = 1
+    val guide = 2
+    val exit = 3
+
+    printMainMenu()
+    val selectedItemMenu = readItemMenu()
+    when (selectedItemMenu) {
+        game -> runGame()
+        guide -> showGuide()
+        exit -> exitProcess(0)
+    }
+}
+
+fun printMainMenu() {
     println("""
         1. Запустить игру
         2. Гид по игре
@@ -6,16 +22,49 @@ fun main() {
         
         Выберите пункт:
     """.trimIndent())
+}
 
-    val message = when (readLine()?.toIntOrNull()) {
-        1 -> "Идет запуск игры"
-        2 -> "Открывается гид по игре"
-        3 -> "Идет закрытие игры"
-        else -> "Некорректный ввод"
+fun readItemMenu(): Int {
+    return readLine()?.toIntOrNull() ?: 0
+}
+
+fun runGame() {
+    // генерируем загаданное число в промежутке от 1 до 100
+    val numberToGuess = (1..100).random()
+
+    // печатаем приветственное сообщение
+    println("Угадайте число от 1 до 100")
+
+    // запускаем бесконечный цикл, пока число не будет угадано
+    while (true) {
+        // запрашиваем у пользователя ввод числа
+        print("Введите число: ")
+        val guess = readLine()?.toIntOrNull()
+
+        // проверяем ввод пользователя
+        if (guess == null) {
+            println("Вы ввели некорректное значение")
+            continue
+        }
+
+        if (guess !in 1..100) {
+            println("Число $guess лежит за пределами заданного промежутка")
+            continue
+        }
+
+        // проверяем, угадал ли пользователь число
+        if (guess == numberToGuess) {
+            println("Вы угадали число!")
+            break
+        } else if (guess < numberToGuess) {
+            println("Загаданное число больше")
+        } else {
+            println("Загаданное число меньше")
+        }
     }
-    println()
-    println(message)
+}
 
+fun showGuide() {
     val questions = arrayOf(
         "Какая цель игры?",
         "Сколько дается попыток?",
